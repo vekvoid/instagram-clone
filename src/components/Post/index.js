@@ -1,58 +1,37 @@
 import React from 'react';
 import './Post.css';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
+class Post extends React.Component {
+  render() {
+    const nickname = this.props.nickname,
+          avatar = this.props.avatar,
+          image = this.props.image,
+          caption = this.props.caption;
 
-const Post = () => {
-	return (
-		<Query
-      query={gql`
-        {
-          post(user_id: "a", post_id: "a") {
-            image
-            caption
-            user {
-              nickname
-              avatar
-            }
-          }
-        }
-      `}
-    >
-			{({ loading, error, data }) => {
-				if (loading) return <p>Loading Post...</p>;
-				if (error) return <p>Error loading Post:</p>;
-				console.log(loading, error, data)
-				let image = data.post.image,
-						caption = data.post.caption,
-						user = data.post.user;
-
-				return (
-					<article className="Post" ref="Post">
-						<header>
-			        <div className="Post-user">
-			          <div className="Post-user-avatar">
-			            <img src={user.avatar} alt={user.nickname} />
-			          </div>
-			          <div className="Post-user-nickname">
-			            <span>{user.nickname}</span>
-			          </div>
-			        </div>
-			      </header>
-			      <div className="Post-image">
-			        <div className="Post-image-bg">
-			          <img alt={caption} src={image} />
-			        </div>
-			      </div>
-			      <div className="Post-caption">
-			        <strong>{user.nickname}</strong> {user.caption}
-			      </div>
-			    </article>
-				);
-			}}
-		</Query>
-  );
-};
+          console.log(nickname);
+    return (
+      <article className="Post" ref="Post">
+        <header>
+          <div className="Post-user">
+            <div className="Post-user-avatar">
+              <img src={avatar} alt={nickname} />
+            </div>
+            <div className="Post-user-nickname">
+              <span>{nickname}</span>
+            </div>
+          </div>
+        </header>
+        <div className="Post-image">
+          <div className="Post-image-bg">
+            <img alt={caption} src={image} />
+          </div>
+        </div>
+        <div className="Post-caption">
+          <strong>{nickname}</strong> {caption}
+        </div>
+      </article>
+    );
+  }
+}
 
 export default Post;
