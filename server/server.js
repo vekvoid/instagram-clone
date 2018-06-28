@@ -2,6 +2,9 @@ let express = require("express");
 let graphqlHTTP = require("express-graphql");
 let { buildSchema } = require("graphql");
 let cors = require("cors");
+let Pusher = require("pusher");
+let bodyParser = require("body-parser");
+let Multipart = require("connect-multiparty");
 
 let schema = buildSchema(`
   type User {
@@ -77,6 +80,15 @@ let root = {
     return Object.values(postslist[user_id]);
   }
 };
+
+// Con
+let pusher = new Pusher({
+  appId: '551412',
+  key: 'dbcc6e1ed5742c308d14',
+  secret: 'dd501051d7c90c9b037c',
+  cluster: 'eu',
+  encrypted: true
+});
 
 let app = express();
 
