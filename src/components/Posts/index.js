@@ -26,10 +26,10 @@ const Posts = () => {
         if (error) return <p>Error Fetching Posts.</p>;
 
         let posts = data.posts;
-console.log(data)
+
         return (<div className="Posts">
           {
-            post.map(
+            posts.map(
               post => <Post 
                         avatar={post.user.avatar} 
                         caption={post.caption} 
