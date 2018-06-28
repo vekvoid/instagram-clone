@@ -81,7 +81,7 @@ let root = {
   }
 };
 
-// Con
+// Pusher client config
 let pusher = new Pusher({
   appId: '551412',
   key: 'dbcc6e1ed5742c308d14',
@@ -90,6 +90,7 @@ let pusher = new Pusher({
   encrypted: true
 });
 
+// Create Express App
 let app = express();
 
 app.use(cors());
@@ -101,5 +102,27 @@ app.use(
     graphiql: true
   })
 );
+
+let multipartMiddleware = new Multipart();
+
+// Trigger add a new post 
+app.post('/newpost', multipartMiddleware, (req,res) => {
+  // Create a sample post
+  let post = {
+    user : {
+      nickname : req.body.name,
+      avatar : req.body.avatar
+    },
+    image : req.body.image,
+    caption : req.body.caption
+  }
+
+  // trigger pusher event 
+  pusher.trigger("posts-channel", "new-post", { 
+    post 
+  });
+
+  return res.json({status : "Post created"});
+});
 
 app.listen(4000);
