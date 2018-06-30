@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Posts.css';
-import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Post from '../Post';
 
@@ -13,6 +12,8 @@ class Posts extends Component {
   }
 
   componentDidMount() {
+    Notification.requestPermission();
+
     this.props.apollo_client
       .query({
         query: gql`
@@ -36,27 +37,48 @@ class Posts extends Component {
 
     this.posts_channel.bind('new-post', data => {
       this.setState({ posts: this.state.posts.concat(data.post) });
+
+      if (Notification.permission === 'granted') {
+        try {
+          let notification = new Notification(
+            'Pusher Instagram Clone', 
+            { 
+              body: `New post from ${data.post.user.nickname}`, 
+              icon: 'https://img.stackshare.io/service/115/Pusher_logo.png',
+              image: `${data.post.image}`,
+            });
+
+          notification.onclick = function(event) {
+            window.open('http://localhost:3000', '_blank');
+          }
+        } catch(e) {
+          console.log('Error displaying notifications');
+        }
+      }
     }, this);
+
   }
 
   render() {
     return (
-      <div className="Posts">
-        {
-          this.state.posts
-            .slice(0)
-            .reverse()
-            .map(
-            post => (
-              <Post 
-                avatar={post.user.avatar} 
-                caption={post.caption} 
-                image={post.image} 
-                key={post.id}
-                nickname={post.user.nickname}
-              />
-            ))
-        }
+      <div>
+        <div className="Posts">
+          {
+            this.state.posts
+              .slice(0)
+              .reverse()
+              .map(
+              post => (
+                <Post 
+                  avatar={post.user.avatar} 
+                  caption={post.caption} 
+                  image={post.image} 
+                  key={post.id}
+                  nickname={post.user.nickname}
+                />
+              ))
+          }
+        </div>
       </div>
     );
   }
