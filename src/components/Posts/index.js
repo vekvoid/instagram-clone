@@ -32,7 +32,7 @@ class Posts extends Component {
         this.setState({ posts: response.data.posts });
       });
 
-    this.posts_channel = this.props.pusher.subscribe('post-channel');
+    this.posts_channel = this.props.pusher.subscribe('posts-channel');
 
     this.posts_channel.bind('new-post', data => {
       this.setState({ posts: this.state.posts.concat(data.post) });
@@ -43,7 +43,10 @@ class Posts extends Component {
     return (
       <div className="Posts">
         {
-          this.state.posts.map(
+          this.state.posts
+            .slice(0)
+            .reverse()
+            .map(
             post => (
               <Post 
                 avatar={post.user.avatar} 
